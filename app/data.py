@@ -7,26 +7,30 @@ from pandas import DataFrame
 from pymongo import MongoClient
 
 
-class MongoDB:
+class Database:
+    """Class which holds a MongoDB and collection of MonsterLab Monster Library Objects"""
+    # database = MongoClient(getenv("DB_URL"), tlsCAFile=where())["Database"]
 
-    load_dotenv()
-    database = MongoClient(getenv("DB_URL"), tlsCAFile=where())["Database"]
-
-    def __init__(self, collection: str):
+    def __init__(self, collection='monsters'):
         """Initializes the Database class with the specified collection.
 
         Args:
             collection (str): The name of the collection to work with, passed as string.
         """
-        self.collection = self.database[collection]
+        load_dotenv()
+        self.database = MongoClient(getenv("DB_URL"), tlsCAFile=where())["Bandersnatch"]
+        self.collection = self.database.get_collection("Monsters")
 
-    def seed(self, amount):
+    def seed(self, amount: int):
+        """ number of records to create, make a new empty list (append)"""
 
-        # make a new empty list (append)
-        self.collection.insert_many(
-            [Monster().to_dict() for i in range(amount)])
-
-        return f"Successfully inserted {amount} documents"
+        if amount == 1:
+            record = Monster().to_dict()
+            return self.collection.insert_one(record).acknowledged
+        if amount > 1:
+            records = [Monster().to_dict() for i in range(amount)]
+            #print(f"Successfully inserted {records} documents")
+            return self.collection.insert_many(records).acknowledged
 
     def reset(self):
         """
@@ -52,4 +56,4 @@ class MongoDB:
         Return an HTML table containing all records in the collection
         """
         df = self.dataframe()
-        return df.html
+        return df.to_html()

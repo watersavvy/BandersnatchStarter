@@ -3,14 +3,14 @@ import os
 
 from Fortuna import random_int, random_float
 from MonsterLab import Monster
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
 from pandas import DataFrame
 
 from app.data import Database
 from app.graph import chart
 from app.machine import Machine
 
-SPRINT = 0
+SPRINT = 3
 APP = Flask(__name__)
 
 
@@ -22,7 +22,12 @@ def home():
         monster=Monster().to_dict(),
         password=b64decode(b"VGFuZ2VyaW5lIERyZWFt"),
     )
-
+@APP.route("/reset")
+def reset():
+    db = Database()
+    db.reset()
+    db.seed(500)
+    return redirect("/data")
 
 @APP.route("/data")
 def data():
@@ -41,7 +46,7 @@ def view():
     if SPRINT < 2:
         return render_template("view.html")
     db = Database()
-    options = ["Level", "Health", "Energy", "Sanity", "Rarity"]
+    options = ["Type", "Level", "Rarity", "Damage", "Health", "Energy", "Sanity"]
     x_axis = request.values.get("x_axis") or options[1]
     y_axis = request.values.get("y_axis") or options[2]
     target = request.values.get("target") or options[4]
@@ -91,10 +96,10 @@ def model():
         health=health,
         energy=energy,
         sanity=sanity,
+        #type=type,
         prediction=prediction,
         confidence=f"{confidence:.2%}",
     )
-
 
 if __name__ == '__main__':
     APP.run()

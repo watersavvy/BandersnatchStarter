@@ -7,7 +7,7 @@ def chart(df: DataFrame, x: str, y: str, target: str) -> Chart:
     """ Returns a scatter plot with the option to choose different features and a target variable"""
 
     graph = Chart(
-        df[['Type','Level', 'Rarity', 'Health', 'Energy', 'Sanity']],
+        df[['Type', 'Level', 'Rarity', 'Health', 'Energy', 'Sanity']],
         title=f"{y} by {x} for {target}"
     ).mark_circle(size=100).encode(
         x=x,
