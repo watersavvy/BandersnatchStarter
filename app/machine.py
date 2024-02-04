@@ -26,6 +26,7 @@ class Machine:
 
     """ Saves model to a file path to hold results """
     def save(self, filepath: str):
+        filepath = r"C:\Users\akeps\PycharmProjects\BandersnatchStarter\app\model.joblib"
         joblib.dump(self, filepath)
 
     """ A STATIC Method belongs to a class, not a specific instance of that class. """

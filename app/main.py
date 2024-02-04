@@ -26,7 +26,7 @@ def home():
 def reset():
     db = Database()
     db.reset()
-    db.seed(500)
+    db.seed(1000)
     return redirect("/data")
 
 @APP.route("/data")
@@ -46,7 +46,7 @@ def view():
     if SPRINT < 2:
         return render_template("view.html")
     db = Database()
-    options = ["Type", "Level", "Rarity", "Damage", "Health", "Energy", "Sanity"]
+    options = ["Type", "Level", "Rarity", "Health", "Energy", "Sanity"]
     x_axis = request.values.get("x_axis") or options[1]
     y_axis = request.values.get("y_axis") or options[2]
     target = request.values.get("target") or options[4]
